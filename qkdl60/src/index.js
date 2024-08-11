@@ -12,39 +12,84 @@ const $timer = document.querySelector('#timer');
 
 let timer = null;
 $startStopBtn.addEventListener('click', () => {
-    if (timer) {
-        stopwatch.pause();
-        clearInterval(timer);
-        timer = null;
-        $startStopLabel.textContent = '시작';
-        $lapResetLabel.textContent = '리셋';
-        $startStopBtn.classList.remove('bg-red-600');
-        $startStopBtn.classList.add('bg-green-600');
-        return;
-    }
-    stopwatch.start(() => {});
-    $startStopLabel.textContent = '중단';
-    $lapResetLabel.textContent = '랩';
-    $startStopBtn.classList.remove('bg-green-600');
-    $startStopBtn.classList.add('bg-red-600');
-    timer = setInterval(() => {
-        const min = getMins(stopwatch.centisecond);
-        const second = getSeconds(stopwatch.centisecond);
-        const centisecond = getCentiseconds(stopwatch.centisecond);
-        $timer.textContent = `${min.toString().padStart(2, 0)}:${second
-            .toString()
-            .padStart(2, 0)}.${centisecond.toString().padStart(2, 0)}`;
-    }, 10);
+  if (timer) {
+    stopwatch.pause();
+    clearInterval(timer);
+    timer = null;
+    $startStopLabel.textContent = '시작';
+    $lapResetLabel.textContent = '리셋';
+    $startStopBtn.classList.remove('bg-red-600');
+    $startStopBtn.classList.add('bg-green-600');
+    return;
+  }
+  stopwatch.start(() => {});
+  $startStopLabel.textContent = '중단';
+  $lapResetLabel.textContent = '랩';
+  $startStopBtn.classList.remove('bg-green-600');
+  $startStopBtn.classList.add('bg-red-600');
+  timer = setInterval(() => {
+    const time = getTime(stopwatch.centisecond);
+    $timer.textContent = time;
+  }, 10);
+});
+/*
+최단 lap 와 최장 lap 뽑는 방법
+*/
+const laps = [];
+let prevTime = 0;
+let longestLapIdx = null;
+let shortestLapIdx = null;
+$lapResetBtn.addEventListener('click', () => {
+  if (timer) {
+    const currentLap = stopwatch.centisecond - prevTime;
+    prevTime = stopwatch.centisecond;
+    laps.push(currentLap);
+    longestLapIdx =
+      laps.length === 1
+        ? null
+        : laps.reduce((acc, lap, idx) => {
+            if (acc === null) return idx;
+            const longest = laps[acc];
+            return longest < lap ? idx : acc;
+          }, null);
+    shortestLapIdx =
+      laps.length === 1
+        ? null
+        : laps.reduce((acc, lap, idx) => {
+            if (acc === null) return idx;
+            const shortest = laps[acc];
+            return shortest > lap ? idx : acc;
+          }, null);
+    $laps.innerHTML = `${laps.reduce((acc, lap, idx) => {
+      return (
+        `<li class="flex justify-between py-2 px-3 border-b-2 
+                ${idx === shortestLapIdx ? 'text-red-600' : ''}
+                ${idx === longestLapIdx ? 'text-green-600' : ''}">
+                        <span>랩 ${idx + 1}</span>
+                        <span>${getTime(lap)}</span>
+                    </li>` + acc
+      );
+    }, ``)}`;
+    return;
+  }
+
+  //TODO리셋 기능
 });
 
-$lapResetBtn.addEventListener('click', () => {});
-
 function getMins(centisecond) {
-    return Math.floor(centisecond / 6000);
+  return Math.floor(centisecond / 6000);
 }
 function getSeconds(centisecond) {
-    return Math.floor(centisecond / 100) % 60;
+  return Math.floor(centisecond / 100) % 60;
 }
 function getCentiseconds(centisecond) {
-    return centisecond % 100;
+  return centisecond % 100;
+}
+function getTime(stopWatchCentisecond) {
+  const min = getMins(stopWatchCentisecond);
+  const second = getSeconds(stopWatchCentisecond);
+  const centisecond = getCentiseconds(stopWatchCentisecond);
+  return `${min.toString().padStart(2, 0)}:${second
+    .toString()
+    .padStart(2, 0)}.${centisecond.toString().padStart(2, 0)}`;
 }
