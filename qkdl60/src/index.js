@@ -76,6 +76,17 @@ $lapResetBtn.addEventListener('click', () => {
   $laps.innerHTML = ``;
 });
 
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'l') {
+    $lapResetBtn.click();
+    return;
+  }
+  if (event.key === 's') {
+    $startStopBtn.click();
+    return;
+  }
+});
+
 function getMins(centisecond) {
   return Math.floor(centisecond / 6000);
 }
