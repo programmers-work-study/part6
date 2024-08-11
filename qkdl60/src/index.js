@@ -35,14 +35,12 @@ $startStopBtn.addEventListener('click', () => {
 /*
 최단 lap 와 최장 lap 뽑는 방법
 */
-const laps = [];
-let prevTime = 0;
+let laps = [];
 let longestLapIdx = null;
 let shortestLapIdx = null;
 $lapResetBtn.addEventListener('click', () => {
   if (timer) {
-    const currentLap = stopwatch.centisecond - prevTime;
-    prevTime = stopwatch.centisecond;
+    const [, currentLap] = stopwatch.createLap();
     laps.push(currentLap);
     longestLapIdx =
       laps.length === 1
@@ -72,8 +70,10 @@ $lapResetBtn.addEventListener('click', () => {
     }, ``)}`;
     return;
   }
-
-  //TODO리셋 기능
+  stopwatch.reset();
+  laps = [];
+  $timer.textContent = `00:00.00`;
+  $laps.innerHTML = ``;
 });
 
 function getMins(centisecond) {
