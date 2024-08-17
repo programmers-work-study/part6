@@ -35,25 +35,25 @@ function formatCentiseconds(centiseconds) {
 }
 
 const handleStartButtonClick = () => {
-    $starStoptButtonLabel.textContent = '중단';
-    $startStopButton.classList.remove('bg-green-600');
-    $startStopButton.classList.add('bg-red-600');
-    $lapResetButtonLabel.textContent = '랩';
-
     stopwatch.start();
 
     setInterval(() => {
         $timer.textContent = formatCentiseconds(stopwatch.centisecond);
     }, 10);
+
+    $starStoptButtonLabel.textContent = '중단';
+    $startStopButton.classList.remove('bg-green-600');
+    $startStopButton.classList.add('bg-red-600');
+    $lapResetButtonLabel.textContent = '랩';
 };
 
 const handleStopButtonClick = () => {
+    stopwatch.pause();
+
     $starStoptButtonLabel.textContent = '시작';
     $startStopButton.classList.remove('bg-red-600');
     $startStopButton.classList.add('bg-green-600');
     $lapResetButtonLabel.textContent = '리셋';
-
-    stopwatch.pause();
 };
 
 const handleStartStopButtonClick = () => {
