@@ -1,6 +1,11 @@
 // TODO: 이 곳에 정답 코드를 작성해주세요.
 import Stopwatch from './stopwatch.js';
 
+const 시작 = '시작';
+const 중단 = '중단';
+const 랩 = '랩';
+const 리셋 = '리셋';
+
 const $timer = document.getElementById('timer');
 const stopwatch = new Stopwatch();
 
@@ -53,10 +58,10 @@ const handleStopButtonClick = () => {
 
 const handleStartStopButtonClick = () => {
     switch ($starStoptButtonLabel.textContent) {
-        case '시작':
+        case 시작:
             handleStartButtonClick();
             break;
-        case '중단':
+        case 중단:
             handleStopButtonClick();
             break;
     }
@@ -80,13 +85,20 @@ const handleLapButtonClick = () => {
     $laps.appendChild($lapItem);
 };
 
+const handleResetButtonClick = () => {
+    stopwatch.reset();
+
+    $timer.textContent = '00:00.00';
+    $laps.innerHTML = '';
+};
+
 const handleLapResetButtonClick = () => {
     switch ($lapResetButtonLabel.textContent) {
-        case '랩':
+        case 랩:
             handleLapButtonClick();
             break;
-        case '리셋':
-            // reset
+        case 리셋:
+            handleResetButtonClick();
             break;
     }
 };
