@@ -6,6 +6,11 @@ const 중단 = '중단';
 const 랩 = '랩';
 const 리셋 = '리셋';
 
+const SHORT_CUTS = {
+    L: 'KeyL',
+    S: 'KeyS',
+};
+
 const $timer = document.getElementById('timer');
 const stopwatch = new Stopwatch();
 
@@ -17,7 +22,7 @@ const $lapResetButtonLabel = document.getElementById('lap-reset-btn-label');
 
 const $laps = document.getElementById('laps');
 
-function formatCentiseconds(centiseconds) {
+const formatCentiseconds = (centiseconds) => {
     const totalSeconds = Math.floor(centiseconds / 100);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
@@ -32,7 +37,7 @@ function formatCentiseconds(centiseconds) {
     );
 
     return `${formattedMinutes}:${formattedSeconds}.${formattedCentiseconds}`;
-}
+};
 
 const handleStartButtonClick = () => {
     stopwatch.start();
@@ -54,17 +59,6 @@ const handleStopButtonClick = () => {
     $startStopButton.classList.remove('bg-red-600');
     $startStopButton.classList.add('bg-green-600');
     $lapResetButtonLabel.textContent = '리셋';
-};
-
-const handleStartStopButtonClick = () => {
-    switch ($starStoptButtonLabel.textContent) {
-        case 시작:
-            handleStartButtonClick();
-            break;
-        case 중단:
-            handleStopButtonClick();
-            break;
-    }
 };
 
 const handleLapButtonClick = () => {
@@ -92,6 +86,17 @@ const handleResetButtonClick = () => {
     $laps.innerHTML = '';
 };
 
+const handleStartStopButtonClick = () => {
+    switch ($starStoptButtonLabel.textContent) {
+        case 시작:
+            handleStartButtonClick();
+            break;
+        case 중단:
+            handleStopButtonClick();
+            break;
+    }
+};
+
 const handleLapResetButtonClick = () => {
     switch ($lapResetButtonLabel.textContent) {
         case 랩:
@@ -103,12 +108,12 @@ const handleLapResetButtonClick = () => {
     }
 };
 
-const handleKeyDown = (event) => {
+const handleKeyUp = (event) => {
     switch (event.code) {
-        case 'KeyL':
+        case SHORT_CUTS.L:
             handleLapResetButtonClick();
             break;
-        case 'KeyS':
+        case SHORT_CUTS.S:
             handleStartStopButtonClick();
             break;
     }
@@ -118,4 +123,4 @@ $startStopButton.addEventListener('click', handleStartStopButtonClick);
 
 $lapResetButton.addEventListener('click', handleLapResetButtonClick);
 
-document.addEventListener('keydown', handleKeyDown);
+document.addEventListener('keyup', handleKeyUp);
