@@ -103,6 +103,19 @@ const handleLapResetButtonClick = () => {
     }
 };
 
+const handleKeyDown = (event) => {
+    switch (event.code) {
+        case 'KeyL':
+            handleLapResetButtonClick();
+            break;
+        case 'KeyS':
+            handleStartStopButtonClick();
+            break;
+    }
+};
+
 $startStopButton.addEventListener('click', handleStartStopButtonClick);
 
 $lapResetButton.addEventListener('click', handleLapResetButtonClick);
+
+document.addEventListener('keydown', handleKeyDown);
