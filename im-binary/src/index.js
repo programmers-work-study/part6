@@ -61,10 +61,19 @@ const handleStopButtonClick = () => {
     $lapResetButtonLabel.textContent = '리셋';
 };
 
+let $minLap = null;
+let $maxLap = null;
+
+const colorMinMax = () => {
+    $minLap.classList.add('text-green-600');
+    $maxLap.classList.add('text-red-600');
+};
+
 const handleLapButtonClick = () => {
     const [lapCount, lapTime] = stopwatch.createLap();
 
     const $lapItem = document.createElement('li');
+
     $lapItem.classList.add(
         'flex',
         'justify-between',
@@ -76,7 +85,34 @@ const handleLapButtonClick = () => {
             <span>랩 ${lapCount}</span>
             <span>${formatCentiseconds(lapTime)}</span>
         `;
+
+    $lapItem.setAttribute('data-time', lapTime);
+
     $laps.prepend($lapItem);
+
+    if ($minLap == null) {
+        $minLap = $lapItem;
+        return;
+    }
+    if ($maxLap == null) {
+        if (lapTime < $minLap.dataset.time) {
+            $maxLap = $minLap;
+            $minLap = $lapItem;
+        } else {
+            $maxLap = $lapItem;
+        }
+        colorMinMax();
+        return;
+    }
+
+    if (lapTime < $minLap.dataset.time) {
+        $minLap.classList.remove('text-green-600');
+        $minLap = $lapItem;
+    } else if (lapTime > $maxLap.dataset.time) {
+        $maxLap.classList.remove('text-red-600');
+        $maxLap = $lapItem;
+    }
+    colorMinMax();
 };
 
 const handleResetButtonClick = () => {
