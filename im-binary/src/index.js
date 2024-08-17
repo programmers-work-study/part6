@@ -7,8 +7,10 @@ const stopwatch = new Stopwatch();
 const $startStopButton = document.getElementById('start-stop-btn');
 const $starStoptButtonLabel = document.getElementById('start-stop-btn-label');
 
-// const $LapResetButton = document.getElementById('lap-reset-btn');
+const $lapResetButton = document.getElementById('lap-reset-btn');
 const $lapResetButtonLabel = document.getElementById('lap-reset-btn-label');
+
+const $laps = document.getElementById('laps');
 
 function formatCentiseconds(centiseconds) {
     const totalSeconds = Math.floor(centiseconds / 100);
@@ -60,4 +62,35 @@ const handleStartStopButtonClick = () => {
     }
 };
 
+const handleLapButtonClick = () => {
+    const [lapCount, lapTime] = stopwatch.createLap();
+
+    const $lapItem = document.createElement('li');
+    $lapItem.classList.add(
+        'flex',
+        'justify-between',
+        'py-2',
+        'px-3',
+        'border-b-2'
+    );
+    $lapItem.innerHTML = `
+            <span>랩 ${lapCount}</span>
+            <span>${formatCentiseconds(lapTime)}</span>
+        `;
+    $laps.appendChild($lapItem);
+};
+
+const handleLapResetButtonClick = () => {
+    switch ($lapResetButtonLabel.textContent) {
+        case '랩':
+            handleLapButtonClick();
+            break;
+        case '리셋':
+            // reset
+            break;
+    }
+};
+
 $startStopButton.addEventListener('click', handleStartStopButtonClick);
+
+$lapResetButton.addEventListener('click', handleLapResetButtonClick);
