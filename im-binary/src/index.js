@@ -76,7 +76,7 @@ const handleLapButtonClick = () => {
             <span>랩 ${lapCount}</span>
             <span>${formatCentiseconds(lapTime)}</span>
         `;
-    $laps.appendChild($lapItem);
+    $laps.prepend($lapItem);
 };
 
 const handleResetButtonClick = () => {
